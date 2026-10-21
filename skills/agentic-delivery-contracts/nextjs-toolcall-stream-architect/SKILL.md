@@ -42,7 +42,7 @@ Collect these before writing code. Mark missing items as blocked rather than inv
 
 2. Define the message, tool-call, and error state machines before implementation. Include terminal states, legal transitions, and which events are idempotent. Gate: every incoming event has exactly one documented transition or an explicit rejection path.
 
-3. Create shared Zod schemas for the request, stream events, tool arguments, tool results, and error codes. Infer TypeScript types from these schemas in one shared module. Gate: valid and invalid samples parse as expected before wiring the route.
+3. Create shared runtime schemas (Zod if the repo already uses it; otherwise the repo's existing validator, or mark the step blocked) for the request, stream events, tool arguments, tool results, and error codes. Infer TypeScript types from these schemas in one shared module. Gate: valid and invalid samples parse as expected before wiring the route.
 
 4. Implement a server-only tool registry that maps registered tool names to schemas and handlers. Reject unknown tools by default and keep MCP credentials out of client code. Gate: a client-side import check or build check confirms the registry cannot enter the browser bundle.
 
@@ -118,6 +118,6 @@ Collect these before writing code. Mark missing items as blocked rather than inv
 
 ## Example
 
-An illustrative a property manager property assistant adds a route handler and chat panel. The route accepts typed messages, validates a `ChatEvent` union, and is expected to abort on client disconnect or a configured deadline. The `uthyrning` read tool streams normally; the `felanmälan` write tool returns `approval_required` until the user confirms.
+An illustrative property-management assistant adds a route handler and chat panel. The route accepts typed messages, validates a `ChatEvent` union, and is expected to abort on client disconnect or a configured deadline. The `uthyrning` read tool streams normally; the `felanmälan` write tool returns `approval_required` until the user confirms.
 
 In the illustrative replay, the reducer receives `tool-call`, then the fixture drops the stream mid-call. The expected reducer outcome is `error{code:"aborted"}`, preserving the last valid messages and offering retry. Verification is recorded only after focused replay tests and the build are run; commands, captured outputs, fixtures, and approval behavior belong in the delivery record.

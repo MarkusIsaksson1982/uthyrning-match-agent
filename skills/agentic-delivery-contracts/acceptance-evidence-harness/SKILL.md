@@ -93,7 +93,7 @@ decision_reason: <why GO or NO-GO>
 - Respect the precedence table from `cross-agent-policy-compiler`. Policy conflicts remain `NO-GO` until resolved.
 - Do not run irreversible actions without explicit named human approval. Default to dry-run, mocks, and test credentials.
 - Use synthetic test data. Do not place secrets, tokens, or personal data in the bundle; reference environment variable names.
-- Keep `a property manager` redacted in artifacts and examples.
+- Use synthetic names and data in artifacts and examples.
 - Do not weaken checks, alter fixtures to pass, or change product code to reach GO unless the scope change is authorized and recorded.
 - Do not reselect the suite to hide failures.
 - Treat a GO as scoped to the recorded commit, environment, and criteria; it is not a general release approval.
@@ -125,4 +125,4 @@ const malformedInput = {
 };
 ```
 
-Command: `npm run test:acceptance -- --case felanmalan`. The malformed-input check exits 1, so the bundle marks it `failed`; the live-write check has no approval and is `unverified`; the decision is `NO-GO`. No production write is attempted. Repo label: `a property manager/property-assistant`.
+Command: `npm run test:acceptance -- --case felanmalan`. The malformed-input check exits 1, so the bundle marks it `failed`; the live-write check has no approval and is `unverified`; the decision is `NO-GO`. No production write is attempted. Repo label: `example/property-assistant`.

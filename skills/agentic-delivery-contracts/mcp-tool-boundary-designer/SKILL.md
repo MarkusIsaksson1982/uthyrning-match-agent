@@ -29,7 +29,7 @@ Gather these before designing:
 - Business capabilities and a named owner for each capability.
 - Authentication model, existing scopes/roles, and tenant or property boundaries.
 - Write actions, side effects, and which actions are irreversible.
-- Approval policy and designated a property manager approver(s).
+- Approval policy and named human approver(s).
 - Current MCP server code, if any, and its tool registry location.
 - Existing tests, fixtures, sandbox access, and repository typecheck/lint commands.
 
@@ -46,7 +46,7 @@ Mark missing inputs as `UNVERIFIED` in the contract. Do not infer scopes, owners
 7. Audit every allow, deny, and failure with timestamp, request ID, actor, agent/client, tool, capability, scopes, input digest, approval ID/approver, outcome, error code, latency, and target IDs. Gate: sensitive values are redacted or hashed.
 8. Write test prompts per tool: allowed, denied, malformed, and cross-tool escalation where relevant. Gate: every tool appears in required categories; expected behavior is explicit.
 9. Document a minimal skeleton: server-only registry, auth mapping, schema validation, approval check, audit write, handler, and error mapper. Gate: no client secrets; it matches the permission matrix.
-10. Review the contract with the capability owner before implementation; implement under `src/mcp` only after review. Gate: owner review is recorded; writes also need designated a property manager approver sign-off.
+10. Review the contract with the capability owner before implementation; implement under `src/mcp` only after review. Gate: owner review is recorded; writes also need sign-off from a named human approver.
 11. Run schema, permission, malformed-input, deny, idempotency, pagination, and audit tests on sandbox or fixtures; never run write tests against production. Gate: capture commands, outputs, exit codes, and skipped tests; no pass without an exit code.
 12. Hand the verified contract, prompts, and evidence downstream; record unresolved risks and rejected actions. Gate: contract is complete; every `UNVERIFIED` item has an owner or blocking note.
 

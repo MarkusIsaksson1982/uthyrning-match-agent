@@ -16,9 +16,9 @@ Use this skill when:
 
 Do not use this skill when:
 
-- The task is only to audit existing instruction layers; use `instruction-layer-auditor`.
-- The task is to configure Claude Code hooks or settings; use `hooks-settings-for-claude-code`.
-- The task is to manage session memory or long-running conversation state; use `managing-long-coding-sessions-with-claude`.
+- The task is only to audit existing instruction layers.
+- The task is to configure Claude Code hooks or settings.
+- The task is to manage session memory or long-running conversation state.
 - The task is to choose which tests to run.
 - The repository has no identifiable policy owner and no existing rules. Ask for an owner before compiling.
 
@@ -32,7 +32,6 @@ Collect and confirm:
 - Known forbidden actions, approval requirements, and irreversible operations.
 - Named policy owner, reviewers, and any exception process.
 - Target installation paths for Cursor, Claude Code, and Codex.
-- The literal employer token `a property manager` where an employer name would otherwise appear.
 
 Do not infer missing constraints. Record missing inputs as open questions.
 
@@ -67,7 +66,7 @@ Do not infer missing constraints. Record missing inputs as open questions.
 
 ## Output contract
 
-Produce a Policy Bundle using the template in `references/output-contract.md`. Include every section in that template: sources, non-negotiable constraints, forbidden actions, precedence, exceptions, generated adapters, conflict test checklist, verification, open questions, and residual risk.
+Produce a Policy Bundle with these sections: sources, non-negotiable constraints, forbidden actions, precedence, exceptions, generated adapters, conflict test checklist, verification, open questions, and residual risk.
 
 ## Guardrails
 
@@ -108,4 +107,4 @@ Produce a Policy Bundle using the template in `references/output-contract.md`. I
 
 ## Example
 
-See `references/example-booking-policy.md` for a worked `a property manager` Next.js example covering booking approval, generated adapters, and conflict checks.
+Example scenario: a property-management Next.js repo with booking approval, generated adapters, and conflict checks.

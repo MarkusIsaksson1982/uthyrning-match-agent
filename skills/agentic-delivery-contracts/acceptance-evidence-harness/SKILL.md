@@ -15,16 +15,16 @@ Use this skill before declaring an AI feature complete when policy, MCP, and str
 
 Do not use it:
 
-- To choose which tests to run. `test-target-selector-with-codex` selects; this skill consumes its selection and results.
-- To finish stalled tasks. `task-finisher-with-grok-v1-5` finishes tasks; this skill leaves a reusable harness and evidence.
-- To verify only that services or processes are up. `truth-first` covers system state; this skill verifies product behavior with runnable checks.
-- To run an adversarial multi-agent review. `santa-method` does that; this skill captures deterministic evidence.
+- To choose which tests to run; this skill consumes an existing selection and its results.
+- To finish stalled tasks; this skill leaves a reusable harness and evidence.
+- To verify only that services or processes are up; this skill verifies product behavior with runnable checks.
+- To run an adversarial multi-agent review; this skill captures deterministic evidence.
 - To certify claims that cannot be executed. Such claims stay `unverified` and cannot support GO.
 
 ## Inputs
 
 - Acceptance criteria, demo scope, and the exact repo state (commit or branch).
-- Existing test selection and raw results from `test-target-selector-with-codex` or the repo.
+- Existing test selection and raw results from the repo.
 - Verification commands, environment, and an artifact directory.
 - Policy source and precedence table from `cross-agent-policy-compiler`.
 - MCP capability map, typed schemas, permission matrix, and allow/deny/malformed prompts from `mcp-tool-boundary-designer`.
@@ -37,10 +37,10 @@ Do not use it:
 1. **Restate acceptance criteria.** Convert every claim into an observable check with a domain (`policy`, `mcp`, `stream`), expected result, and failure signal. **Gate:** no vague criterion remains.
 2. **Ingest, do not reselect.** Take the existing selection and results as given, and record their provenance. If selection is missing, add only minimal checks for unresolved criteria and label the gap. **Gate:** suite source and raw results are traceable.
 3. **Map coverage.** Tie each check to a policy rule, an MCP allow/deny/malformed case, or a stream state. **Gate:** every required criterion has a check or an explicit `unverified` status.
-4. **Generate missing proof.** Write executable fixtures, commands, and expected artifacts for unresolved criteria; use synthetic data and mocked side effects. **Gate:** each new fixture runs and its failure mode is testable.
+4. **Generate missing proof.** Write executable fixtures, commands, and expected artifacts for unresolved criteria; use synthetic data and mocked side effects. **Gate:** each new fixture is runnable and has a failing baseline; do not execute it here.
 5. **Gate irreversible actions.** Identify writes, charges, messages, deletes, and production calls. Require a named human approver before any such action; otherwise dry-run or mock it. **Gate:** approval is recorded, or the action is excluded and marked `unverified`.
 6. **Run the smallest honest set.** Execute only the checks needed for the criteria in a test or sandbox environment. Capture stdout, stderr, exit code, duration, and artifact paths. **Gate:** results come from commands, not inference; stop on unexpected side effects.
-7. **Classify every check.** Use `passed` only when the expected result is observed and the command succeeds; use `failed` on mismatch; use `skipped` when not run; use `unverified` when no executable proof exists. **Gate:** no `skipped` or `unverified` check appears under `passed`.
+7. **Classify every check.** Use `passed` only when the expected result is observed and the command succeeds; use `failed` on mismatch; use `skipped` when proof exists but was not run; use `unverified` when no executable proof exists. **Gate:** no `skipped` or `unverified` check appears under `passed`.
 8. **Apply the decision rule.** Return `GO` only when all required criteria pass, required approvals exist, and no required check is unverified. Otherwise return `NO-GO`; record owner-approved waivers explicitly. **Gate:** the rule is applied verbatim.
 9. **Emit one bundle.** Fill the output contract with raw results, exact commands, artifact paths, and residual risk. **Gate:** every bundle claim matches an artifact or raw output.
 10. **Hand back regression inputs.** Offer new fixtures to the owning skill and record whether they were accepted. **Gate:** acceptance or gap is recorded; do not edit another skill's contracts silently.
@@ -57,6 +57,7 @@ owner: <accountable person or team>
 suite_selection: <source of selected tests>
 criteria:
   - id: <AC-1>
+    required: true | false
     claim: <observable behavior>
     domain: policy | mcp | stream
     check: <test or fixture id>
@@ -70,10 +71,14 @@ passed_checks: [<ids>]
 failed_checks: [<ids>]
 skipped_checks: [<ids>]
 unverified_checks: [<ids>]
+waivers:
+  - scope: <criterion or action scope>
+    owner: <named owner>
+    expiry: <ISO-8601 timestamp>
 approvals:
   - action: <gated action>
     approver: <named human>
-    status: approved | not_requested | denied
+    status: approved | not_requested | denied | expired
 artifacts:
   - <path>
 residual_risk: >-
@@ -104,9 +109,9 @@ decision_reason: <why GO or NO-GO>
 
 Use one source at `.agents/skills/acceptance-evidence-harness/` and mirror or symlink it to `.claude/skills/acceptance-evidence-harness/`. Keep `SKILL.md` lean; put long fixtures or logs in `references/` or `assets/` only when needed.
 
-- **Cursor.** Install at `.agents/skills/acceptance-evidence-harness/`, `.cursor/skills/acceptance-evidence-harness/`, or `~/.cursor/skills/acceptance-evidence-harness/`; Cursor also loads `.claude/skills` and `.codex/skills`. Invoke with `/acceptance-evidence-harness`, run checks from the terminal, and attach the bundle to the task summary. Keep always-on `.cursor/rules/*.mdc` narrow and pointed at `AGENTS.md`; do not copy this procedure into every rule.
-- **Claude Code.** Install at `.claude/skills/acceptance-evidence-harness/SKILL.md` or `~/.claude/skills/acceptance-evidence-harness/SKILL.md`; invoke automatically by description or as `/acceptance-evidence-harness`. Put durable project guidance in `CLAUDE.md`. Use subagents only for independent verification of the bundle, not to produce its evidence.
-- **Codex.** Install at `.agents/skills/acceptance-evidence-harness/SKILL.md` or `~/.agents/skills/acceptance-evidence-harness/SKILL.md`; invoke implicitly, with `$acceptance-evidence-harness`, or through `/skills`. Execute commands, save artifacts, and report exact exit codes. Point `AGENTS.md` to the skill.
+- **Cursor.** Use the project skill location and invoke with `/acceptance-evidence-harness`; run checks from the terminal and attach the bundle to the task summary.
+- **Claude Code.** Use the project skill location; invoke automatically by description or as `/acceptance-evidence-harness`. Put durable project guidance in `CLAUDE.md`.
+- **Codex.** Use the project skill location; invoke implicitly, with `$acceptance-evidence-harness`, or through `/skills`. Execute commands, save artifacts, and report exact exit codes.
 
 ## Example
 

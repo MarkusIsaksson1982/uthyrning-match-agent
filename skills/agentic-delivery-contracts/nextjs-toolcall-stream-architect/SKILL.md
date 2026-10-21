@@ -18,9 +18,9 @@ Use this skill when:
 
 Do not use this skill when:
 
-- The task is auditing existing App Router performance; use `nextjs-app-router-audit`.
-- The task is prompt-template or model-instruction design; use `prompt-engineer`.
-- The task is prompt-injection scanning; use `ai-prompt-injection-defense-shield-llm-jailbreak-security-auditor-code-review-agent`.
+- The task is auditing existing App Router performance.
+- The task is prompt-template or model-instruction design.
+- The task is prompt-injection scanning.
 - The task is designing MCP permissions and schemas from scratch; use `mcp-tool-boundary-designer` first.
 - The task is compiling cross-agent repository policy; use `cross-agent-policy-compiler`.
 
@@ -112,7 +112,7 @@ Collect these before writing code. Mark missing items as blocked rather than inv
 
 ## Agent notes
 
-- Cursor: install at `.agents/skills/nextjs-toolcall-stream-architect/` (project) or `~/.cursor/skills/nextjs-toolcall-stream-architect/` (user); invoke by description or `/nextjs-toolcall-stream-architect`.
+- Cursor: use the project skill location; invoke by description or `/nextjs-toolcall-stream-architect`.
 - Claude Code: mirror or symlink `.agents/skills/nextjs-toolcall-stream-architect/` to `.claude/skills/nextjs-toolcall-stream-architect/`; invoke by description or `/nextjs-toolcall-stream-architect`.
 - Codex: keep the skill under `.agents/skills/nextjs-toolcall-stream-architect/`; invoke implicitly, via `$nextjs-toolcall-stream-architect`, or through `/skills`.
 
@@ -120,4 +120,4 @@ Collect these before writing code. Mark missing items as blocked rather than inv
 
 An illustrative a property manager property assistant adds a route handler and chat panel. The route accepts typed messages, validates a `ChatEvent` union, and is expected to abort on client disconnect or a configured deadline. The `uthyrning` read tool streams normally; the `felanmälan` write tool returns `approval_required` until the user confirms.
 
-In the illustrative replay, the reducer receives `tool-call`, then the fixture drops the stream mid-call. The expected reducer outcome is `error{code:"aborted"}`, preserving the last valid messages and offering retry. The expected verification is that focused replay tests and the build exit `0`; the actual commands, captured outputs, fixtures, and approval behavior are recorded in the delivery record only after they are observed.
+In the illustrative replay, the reducer receives `tool-call`, then the fixture drops the stream mid-call. The expected reducer outcome is `error{code:"aborted"}`, preserving the last valid messages and offering retry. Verification is recorded only after focused replay tests and the build are run; commands, captured outputs, fixtures, and approval behavior belong in the delivery record.

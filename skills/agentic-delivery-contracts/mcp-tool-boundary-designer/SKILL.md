@@ -16,8 +16,8 @@ Use this skill when:
 - An existing MCP server has tools that are too broad, untested, or missing ownership.
 
 Do not use this skill for:
-- Installing, screening, or trusting third-party MCP packages; use `skill-install-safety-gate`.
-- Connecting to Agensi; this skill builds internal servers.
+- Installing, screening, or trusting third-party MCP packages.
+- Connecting to an external marketplace; this skill builds internal servers.
 - Configuring Claude Code hooks or settings; use `hooks-settings-for-claude-code`.
 - Streaming runtime implementation; hand contracts to `nextjs-toolcall-stream-architect`.
 - Final go/no-go evidence aggregation; hand results to `acceptance-evidence-harness`.
@@ -57,7 +57,7 @@ Mark missing inputs as `UNVERIFIED` in the contract. Do not infer scopes, owners
 
 ## Scope and status
 - API: <routes/tables/RPCs>; environment: <sandbox|production>
-- Owners: <capability owners>; approvers: <a property manager approvers>
+- Owners: <capability owners>; approvers: <named human approvers>
 - Status: <draft|reviewed|approved>; unverified: <items or "none">
 
 ## Capability map
@@ -113,7 +113,7 @@ Mark missing inputs as `UNVERIFIED` in the contract. Do not infer scopes, owners
 - Unresolved behavior: <...>
 - Accepted risk: <...>
 - Owner approval: <name/date>
-- a property manager approver: <name/date>
+- Human approver: <name/date>
 ```
 
 ## Guardrails
@@ -125,7 +125,7 @@ Mark missing inputs as `UNVERIFIED` in the contract. Do not infer scopes, owners
 - Keep secrets server-side. Do not place credentials in prompts, tool outputs, audit logs, or client bundles.
 - Redact or hash personal and sensitive data in logs; avoid real customer data in test prompts.
 - Run tests against sandbox services or fixtures. Do not perform production writes during boundary validation.
-- Do not install or screen third-party MCP packages here; route that work to `skill-install-safety-gate`.
+- Do not install or screen third-party MCP packages here.
 - Report only evidence actually captured. A missing test is `skipped` or `unverified`, not a pass.
 
 ## Works with

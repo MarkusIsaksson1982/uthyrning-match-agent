@@ -142,14 +142,25 @@ Tests are `test/*.test.ts` and never read files from disk — synthetic data liv
 `src/data/*.ts` and is imported directly.
 
 ## Status (generated)
-- First prototype scaffold built 2026-10-18 for a job application. **Local only, not published.**
+- First prototype built 2026-10-18 as a job-application demo.
 - Tasks: T1 passed, T2 passed, T3 passed, T4 passed
 - `npm test`: 82 pass, 0 fail (tsc --strict + node --test).
 - Written by free OpenCode models (deepseek-v4.1-flash-free, glm-5.3-flash-free, space-bunny-free) task by task; every task had to compile and pass its tests before it was committed; reviewed by another free model (docs/REVIEW.md).
 - Synthetic data only; any LLM step is an offline stub.
 
 ## Web status (generated)
-- Next.js 16 App Router + React 19 front end in `web/`, added 2026-10-19. **Local only, not published.**
+- Next.js 16 App Router + React 19 front end in `web/`, added 2026-10-19. Re-verified 2026-10-21: `npm run check` green (82 node:test + 40 Vitest, next build ok).
 - Gates: `npm test` (tsc --strict + node --test: 82 pass), `npm run typecheck:web` (strict), `npm run test:web` (Vitest + RTL: 40 pass), `npm run build:web` (ok).
 - Domain module is swappable (`DEMO_DOMAIN=rental|fault-report`), see ARCHITECTURE.md.
 - Written task by task by free OpenCode models (beam-free, deepseek-v4.1-flash-free); every step had to pass all gates before its commit; reviewed by another free model (docs/WEB_REVIEW.md).
+
+## Quick start
+```bash
+npm install
+npm run check            # tsc + 82 node:test, web typecheck, 40 Vitest/RTL, next build
+npm run dev:web          # DEMO_DOMAIN=rental (default) or DEMO_DOMAIN=fault-report
+```
+
+## Agent skills in this repo
+- `skills/uthyrning-match/` – keeps an agent rules-first when it uses the MCP tools.
+- `skills/agentic-delivery-contracts/` – a four-skill bundle (cross-agent policy, MCP tool boundaries, Next.js streaming tool calls, acceptance evidence). Draft v0.2; see its README.

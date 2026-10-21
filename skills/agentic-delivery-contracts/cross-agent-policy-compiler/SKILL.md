@@ -1,6 +1,6 @@
 ---
 name: cross-agent-policy-compiler
-description: Compiles one repository policy source into portable AGENTS.md, Cursor rule files, and Claude Code adapter notes so Cursor, Claude Code, and Codex follow consistent rules. Use when a repo needs consistent cross-agent rules or when agent behavior drifts between tools.
+description: Produces portable AGENTS.md, Cursor rule files, and Claude Code adapter notes from one repository policy source so Cursor, Claude Code, and Codex follow consistent rules. Use when a repo needs consistent cross-agent rules or when agent behavior drifts between tools.
 ---
 
 # Cross-Agent Policy Compiler
@@ -19,7 +19,7 @@ Do not use this skill when:
 - The task is only to audit existing instruction layers; use `instruction-layer-auditor`.
 - The task is to configure Claude Code hooks or settings; use `hooks-settings-for-claude-code`.
 - The task is to manage session memory or long-running conversation state; use `managing-long-coding-sessions-with-claude`.
-- The task is to choose which tests to run; use `test-target-selector-with-codex`.
+- The task is to choose which tests to run.
 - The repository has no identifiable policy owner and no existing rules. Ask for an owner before compiling.
 
 ## Inputs
@@ -44,7 +44,7 @@ Do not infer missing constraints. Record missing inputs as open questions.
 2. Extract non-negotiable constraints and forbidden actions. Separate hard requirements from preferences, defaults, and examples.
    Verification gate: every extracted item cites its source path and line or section; uncited items are removed or marked unknown.
 
-3. Build a precedence model. Start with this order and adjust only with named owner approval: security and legal constraints, explicit human policy owner decisions, the tool-agnostic policy source, generated agent adapters, repository defaults, and individual preferences.
+3. Build a precedence model. The policy source is the record. Owner decisions are time-boxed amendments with an owner, scope, reason, and expiry; they override the source only for that period. Generated adapters, repository defaults, and individual preferences follow the recorded policy.
    Verification gate: every precedence row has a scope and an owner; conflicting rows are listed rather than silently merged.
 
 4. Write one tool-agnostic policy source, recommended at `docs/agent-policy.md`. Include constraints, forbidden actions, precedence, exceptions, approval gates, and verification expectations. Keep tool paths out of the policy body.
@@ -53,7 +53,7 @@ Do not infer missing constraints. Record missing inputs as open questions.
 5. Generate the three adapters:
    - `AGENTS.md`: durable repository instructions, a precedence summary, and a pointer to this skill and the policy source.
    - `.cursor/rules/*.mdc`: narrow, scoped rules with `description`, `globs`, and `alwaysApply`; link back to `AGENTS.md` and the policy source instead of duplicating all policy text.
-   - `CLAUDE.md` plus `.claude/skills/cross-agent-policy-compiler/`: project guidance and adapter notes, mirrored or symlinked from `.agents/skills/cross-agent-policy-compiler/`.
+   - `CLAUDE.md` plus Claude adapter notes: project guidance and adapter notes.
    Verification gate: every generated adapter maps to at least one policy section, and no adapter introduces a new unowned rule.
 
 6. Preserve explicit exceptions. Require an owner, scope, reason, and expiry or review date for each exception.
@@ -67,7 +67,7 @@ Do not infer missing constraints. Record missing inputs as open questions.
 
 ## Output contract
 
-Produce a Policy Compilation Bundle using the template in `references/output-contract.md`. Include every section in that template: sources, non-negotiable constraints, forbidden actions, precedence, exceptions, generated adapters, conflict test checklist, verification, open questions, and residual risk.
+Produce a Policy Bundle using the template in `references/output-contract.md`. Include every section in that template: sources, non-negotiable constraints, forbidden actions, precedence, exceptions, generated adapters, conflict test checklist, verification, open questions, and residual risk.
 
 ## Guardrails
 
@@ -78,31 +78,31 @@ Produce a Policy Compilation Bundle using the template in `references/output-con
 - Never copy secrets, tokens, or credentials from configuration files into policy or adapters.
 - Do not add hooks, settings, test-selection logic, or session memory to this skill.
 - Mark untested adapters as unverified; do not claim behavior was observed across tools without recorded evidence.
-- Keep tool-specific details in the Agent notes section and generated adapters, not in the policy body.
+- Keep tool-specific details in the Agent notes section and generated adapters, not in the policy body. Treat platform-loading behavior as an assumption to verify, not as a fact.
 
 ## Works with
 
 - `mcp-tool-boundary-designer`: this skill supplies permission constraints, approval gates, and forbidden actions that the MCP capability map must enforce.
 - `nextjs-toolcall-stream-architect`: this skill supplies streaming safety, cancellation, and secret-handling rules that the route handler and client reducer must follow.
-- `acceptance-evidence-harness`: the compiled constraints and conflict checklist become acceptance checks; the harness records passed, failed, skipped, and unverified results in its go/no-go bundle.
+- `acceptance-evidence-harness`: the produced constraints and conflict checklist become acceptance checks; the harness records passed, failed, skipped, and unverified results in its go/no-go bundle.
 
 ## Agent notes
 
 ### Cursor
 
-- Install the skill at `.agents/skills/cross-agent-policy-compiler/SKILL.md`; Cursor also loads `.claude/skills`.
+- Use the project skill location; verify which project locations the platform loads.
 - Invoke it with `/cross-agent-policy-compiler` or rely on description matching.
 - Keep always-on guidance in narrow `.cursor/rules/*.mdc` files with `description`, `globs`, and `alwaysApply`; link `AGENTS.md` rather than duplicating it.
 
 ### Claude Code
 
-- Mirror or symlink `.agents/skills/cross-agent-policy-compiler/` to `.claude/skills/cross-agent-policy-compiler/`.
+- Mirror or symlink the project skill location to `.claude/skills/cross-agent-policy-compiler/` only after verifying platform loading.
 - Invoke it automatically by description or with `/cross-agent-policy-compiler`.
 - Store project guidance in `CLAUDE.md`; keep hooks and settings out of this skill and in `.claude/settings.json` when needed.
 
 ### Codex
 
-- Store the skill at `.agents/skills/cross-agent-policy-compiler/SKILL.md`.
+- Use the project skill location.
 - Invoke it implicitly or with `$cross-agent-policy-compiler` or `/skills`.
 - Put durable repository instructions in `AGENTS.md` and have it point to this skill and the policy source.
 

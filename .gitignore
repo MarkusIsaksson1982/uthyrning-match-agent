@@ -1,0 +1,7 @@
+node_modules
+dist
+web/.next
+web/.vitest-cache
+web/vitest-report.json
+*.tsbuildinfo
+web/next-env.d.ts
